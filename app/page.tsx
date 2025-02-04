@@ -1,101 +1,107 @@
-import Image from "next/image";
+interface DataItem {
+  id: string;
+  title: string;
+  description: string;
+  value: number;
+  trend?: "up" | "down" | "neutral";
+}
+
+interface DataDisplayProps {
+  data: DataItem[];
+}
+
+function DataDisplay({ data }: DataDisplayProps) {
+  return (
+    <div className="grid gap-6 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3">
+      {data.map((item) => (
+        <div
+          key={item.id}
+          className="p-6 rounded-lg border border-black/[.08] dark:border-white/[.08] bg-white dark:bg-black/[.12] hover:border-black/[.16] dark:hover:border-white/[.16] transition-colors"
+        >
+          <div className="flex justify-between items-start mb-4">
+            <h3 className="font-medium text-lg">{item.title}</h3>
+            {item.trend && (
+              <span className={`
+                px-2 py-1 rounded-full text-sm
+                ${item.trend === 'up' ? 'bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200' : ''}
+                ${item.trend === 'down' ? 'bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-200' : ''}
+                ${item.trend === 'neutral' ? 'bg-gray-100 text-gray-800 dark:bg-gray-900 dark:text-gray-200' : ''}
+              `}>
+                {item.trend === 'up' ? '↑' : item.trend === 'down' ? '↓' : '–'}
+              </span>
+            )}
+          </div>
+          <p className="text-sm text-gray-600 dark:text-gray-400 mb-3">
+            {item.description}
+          </p>
+          <div className="text-2xl font-semibold">
+            {item.value.toLocaleString()}
+          </div>
+        </div>
+      ))}
+    </div>
+  );
+}
 
 export default function Home() {
-  return (
-    <div className="grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20 font-[family-name:var(--font-geist-sans)]">
-      <main className="flex flex-col gap-8 row-start-2 items-center sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={180}
-          height={38}
-          priority
-        />
-        <ol className="list-inside list-decimal text-sm text-center sm:text-left font-[family-name:var(--font-geist-mono)]">
-          <li className="mb-2">
-            Get started by editing{" "}
-            <code className="bg-black/[.05] dark:bg-white/[.06] px-1 py-0.5 rounded font-semibold">
-              app/page.tsx
-            </code>
-            .
-          </li>
-          <li>Save and see your changes instantly.</li>
-        </ol>
+  // Example data
+  const sampleData: DataItem[] = [
+    {
+      id: '1',
+      title: 'Total Users',
+      description: 'Active users in the last 30 days',
+      value: 45892,
+      trend: 'up',
+    },
+    {
+      id: '2',
+      title: 'Revenue',
+      description: 'Monthly recurring revenue',
+      value: 125750,
+      trend: 'up',
+    },
+    {
+      id: '3',
+      title: 'Conversion Rate',
+      description: 'Percentage of visitors who subscribe',
+      value: 2.4,
+      trend: 'down',
+    },
+    {
+      id: '4',
+      title: 'Average Time',
+      description: 'Average session duration (minutes)',
+      value: 8.5,
+      trend: 'neutral',
+    },
+    {
+      id: '5',
+      title: 'New Sign-ups',
+      description: 'New users this week',
+      value: 892,
+      trend: 'up',
+    },
+    {
+      id: '6',
+      title: 'Support Tickets',
+      description: 'Open support requests',
+      value: 43,
+      trend: 'down',
+    },
+  ];
 
-        <div className="flex gap-4 items-center flex-col sm:flex-row">
-          <a
-            className="rounded-full border border-solid border-transparent transition-colors flex items-center justify-center bg-foreground text-background gap-2 hover:bg-[#383838] dark:hover:bg-[#ccc] text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={20}
-              height={20}
-            />
-            Deploy now
-          </a>
-          <a
-            className="rounded-full border border-solid border-black/[.08] dark:border-white/[.145] transition-colors flex items-center justify-center hover:bg-[#f2f2f2] dark:hover:bg-[#1a1a1a] hover:border-transparent text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 sm:min-w-44"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Read our docs
-          </a>
-        </div>
+  return (
+    <div className="min-h-screen p-8">
+      <header className="mb-8">
+        <h1 className="text-2xl font-bold mb-2">Dashboard Overview</h1>
+        <p className="text-gray-600 dark:text-gray-400">
+          Real-time metrics and key performance indicators
+        </p>
+      </header>
+      
+      <main>
+        <DataDisplay data={sampleData} />
       </main>
-      <footer className="row-start-3 flex gap-6 flex-wrap items-center justify-center">
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/file.svg"
-            alt="File icon"
-            width={16}
-            height={16}
-          />
-          Learn
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/window.svg"
-            alt="Window icon"
-            width={16}
-            height={16}
-          />
-          Examples
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/globe.svg"
-            alt="Globe icon"
-            width={16}
-            height={16}
-          />
-          Go to nextjs.org →
-        </a>
-      </footer>
     </div>
   );
 }
